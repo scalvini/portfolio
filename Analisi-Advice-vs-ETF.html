@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analisi Portafoglio — Advice+ vs ETF</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f7f7f5;
+    --bg3: #efefed;
+    --text: #1a1a1a;
+    --text2: #555552;
+    --text3: #888885;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.22);
+    --green: #2e7d32;
+    --green-bg: #e8f5e9;
+    --red: #c62828;
+    --red-bg: #fdecea;
+    --blue: #1565c0;
+    --blue-bg: #e3f2fd;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --bg2: #2a2a2a;
+      --bg3: #333333;
+      --text: #e8e8e8;
+      --text2: #aaaaaa;
+      --text3: #777777;
+      --border: rgba(255,255,255,0.12);
+      --border2: rgba(255,255,255,0.22);
+      --green: #66bb6a;
+      --green-bg: #1b3a1e;
+      --red: #ef9a9a;
+      --red-bg: #3e1a1a;
+      --blue: #64b5f6;
+      --blue-bg: #1a2e3e;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.5;
+  }
+  header {
+    padding: 24px 32px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+  header p { font-size: 12px; color: var(--text3); }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px 24px; }
+  .tabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 9px 22px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    color: var(--text2);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    font-family: var(--font);
+    border-radius: var(--radius) var(--radius) 0 0;
+    transition: color 0.15s;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+  .tab:hover:not(.active) { color: var(--text); background: var(--bg2); }
+  .pane { display: none; }
+  .pane.active { display: block; }
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+  .kpi {
+    background: var(--bg2);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+  .kl { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .kv { font-size: 18px; font-weight: 600; }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--border2);
+    font-size: 11px;
+    color: var(--text2);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+    background: var(--bg2);
+  }
+  th.r { text-align: right; }
+  td {
+    padding: 5px 8px;
+    border-bottom: 0.5px solid var(--border);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+  }
+  td.r { text-align: right; max-width: none; }
+  tr:hover td { background: var(--bg2); }
+  tfoot td {
+    font-weight: 600;
+    border-top: 1px solid var(--border2);
+    background: var(--bg2);
+    padding: 7px 8px;
+    white-space: nowrap;
+  }
+  .sec td {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text2);
+    background: var(--bg3);
+    padding: 4px 8px;
+    border-bottom: 0.5px solid var(--border);
+    white-space: nowrap;
+    max-width: none;
+  }
+  .mono { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .b-f { background: var(--blue-bg); color: var(--blue); }
+  .b-e { background: var(--green-bg); color: var(--green); }
+  .note { font-size: 11px; color: var(--text3); margin-top: 12px; line-height: 1.6; }
+  .two-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 600px) { .two-panels { grid-template-columns: 1fr; } }
+  .cmp-panel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+  }
+  .cmp-panel.winner { border-color: var(--green); }
+  .cmp-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 10px;
+  }
+  .winner .cmp-title { color: var(--green); }
+  .cmp-kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  footer {
+    margin-top: 32px;
+    padding: 16px 32px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Analisi Portafoglio — Advice+ vs ETF</h1>
+  <p>Data: 31/03/2026 &nbsp;·&nbsp; Verbali FinecoBank: 03/09/2025 e 12/09/2025 &nbsp;·&nbsp; EUR/USD: 1,154</p>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('advice')">Advice+ &nbsp;(44 pos.)</button>
+    <button class="tab" onclick="showTab('etf')">ETF &nbsp;(3 str.)</button>
+    <button class="tab" onclick="showTab('cmp')">Comparazione</button>
+  </div>
+
+  <!-- TAB 1: ADVICE -->
+  <div class="pane active" id="pane-advice">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kl">Investito sett. 2025</div><div class="kv">€ 3.425.764</div></div>
+      <div class="kpi"><div class="kl">Valore oggi</div><div class="kv" id="a-now">—</div></div>
+      <div class="kpi"><div class="kl">Variazione €</div><div class="kv" id="a-diff">—</div></div>
+      <div class="kpi"><div class="kl">Rendimento %</div><div class="kv" id="a-pct">—</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:28px">#</th>
+          <th style="width:220px">Titolo</th>
+          <th style="width:100px">ISIN</th>
+          <th class="r" style="width:70px">Quote</th>
+          <th class="r" style="width:100px">Ctv sett.25 €</th>
+          <th class="r" style="width:80px">NAV oggi</th>
+          <th class="r" style="width:100px">Ctv oggi €</th>
+          <th class="r" style="width:70px">+/−%</th>
+        </tr></thead>
+        <tbody id="a-body"></tbody>
+        <tfoot id="a-foot"></tfoot>
+      </table>
+    </div>
+    <p class="note">EUR/USD 1,154 &nbsp;·&nbsp; BNP Russia sospeso dal 28/02/2022 (valore invariato) &nbsp;·&nbsp; Prezzi NAV aggiornati 31/03/2026</p>
+  </div>
+
+  <!-- TAB 2: ETF -->
+  <div class="pane" id="pane-etf">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kl">Investito</div><div class="kv">€ 3.500.000</div></div>
+      <div class="kpi"><div class="kl">Valore oggi</div><div class="kv pos" id="e-now">—</div></div>
+      <div class="kpi"><div class="kl">Guadagno €</div><div class="kv pos" id="e-diff">—</div></div>
+      <div class="kpi"><div class="kl">Rendimento %</div><div class="kv pos" id="e-pct">—</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:240px">ETF</th>
+          <th style="width:105px">ISIN</th>
+          <th class="r">Investito €</th>
+          <th class="r">Quote (stima)</th>
+          <th class="r">NAV acquisto</th>
+          <th class="r">NAV oggi</th>
+          <th class="r">Valore €</th>
+          <th class="r">Guadagno €</th>
+          <th class="r">%</th>
+        </tr></thead>
+        <tbody id="e-body"></tbody>
+        <tfoot id="e-foot"></tfoot>
+      </table>
+    </div>
+    <p class="note">Quote stimate: investimento ÷ NAV acquisto (ricavato a ritroso dal rendimento noto). Non costituisce consulenza finanziaria.</p>
+  </div>
+
+  <!-- TAB 3: COMPARAZIONE -->
+  <div class="pane" id="pane-cmp">
+    <div class="two-panels">
+      <div class="cmp-panel" id="p-a">
+        <div class="cmp-title">Advice+ — 44 posizioni</div>
+        <div class="cmp-kpi">
+          <div class="kpi"><div class="kl">Investito</div><div class="kv" id="c-a-inv">—</div></div>
+          <div class="kpi"><div class="kl">Valore oggi</div><div class="kv" id="c-a-now">—</div></div>
+          <div class="kpi"><div class="kl">Rendimento</div><div class="kv" id="c-a-pct">—</div></div>
+        </div>
+      </div>
+      <div class="cmp-panel" id="p-e">
+        <div class="cmp-title">ETF — 3 strumenti</div>
+        <div class="cmp-kpi">
+          <div class="kpi"><div class="kl">Investito</div><div class="kv">€ 3.500.000</div></div>
+          <div class="kpi"><div class="kl">Valore oggi</div><div class="kv pos" id="c-e-now">—</div></div>
+          <div class="kpi"><div class="kl">Rendimento</div><div class="kv pos" id="c-e-pct">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:200px">Metrica</th>
+          <th class="r"><span class="badge b-f">Advice+ 44 fondi</span></th>
+          <th class="r"><span class="badge b-e">ETF 3 strumenti</span></th>
+          <th class="r">Delta</th>
+        </tr></thead>
+        <tbody id="c-body"></tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Top 3 fondi Advice+ per rendimento</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Fondo</th>
+          <th class="r">Ctv sett.25 €</th>
+          <th class="r">Ctv oggi €</th>
+          <th class="r">%</th>
+          <th class="r">Contributo pp</th>
+        </tr></thead>
+        <tbody id="top3-body"></tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Bottom 3 fondi Advice+ per rendimento</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Fondo</th>
+          <th class="r">Ctv sett.25 €</th>
+          <th class="r">Ctv oggi €</th>
+          <th class="r">%</th>
+          <th class="r">Contributo pp</th>
+        </tr></thead>
+        <tbody id="bot3-body"></tbody>
+      </table>
+    </div>
+    <p class="note">Contributo pp = impatto del singolo fondo sul rendimento totale del portafoglio Advice+. I rendimenti passati non garantiscono quelli futuri.</p>
+  </div>
+</div>
+
+<footer>
+  Portafoglio Advice+: Verbale FinecoBank del 12/09/2025, prezzi NAV aggiornati al 31/03/2026. EUR/USD 1,154.
+  BNP Paribas Russia Equity (LU0823431720) sospeso dal 28/02/2022 — valore bloccato all'ultimo NAV noto.
+  ETF: quote stimate su base investimento e rendimento noto. Non costituisce consulenza finanziaria.
+  I rendimenti passati non garantiscono quelli futuri.
+</footer>
+
+<script>
+const EURUSD = 1.154;
+
+const advice = [
+  {sec:"Strutturati / target"},
+  {n:"SM Global Defensive Call 3Y II",           i:"IE00031C3TI7", q:4000,      ctv0:404728, nav1:98.35,   c:"EUR"},
+  {n:"SM Global Defensive Call 7Y",              i:"IE000RB61451", q:5919.787,  ctv0:400000, nav1:65.23,   c:"EUR"},
+  {n:"Target Global Call 26 V FAM L",            i:"IE000T9CXMR4", q:594.316,   ctv0:62416,  nav1:109.83,  c:"EUR"},
+  {n:"Target Ch C 2026 FAM",                     i:"IE00BNGJHN33", q:500.001,   ctv0:46146,  nav1:99.36,   c:"EUR"},
+  {sec:"Fondi nuovi (settembre 2025)"},
+  {n:"Banor Club Fineco AM Fund A EUR",          i:"IE000LN34QM0", q:862.277,   ctv0:100000, nav1:119.17,  c:"EUR"},
+  {n:"Robeco BP Global Premium Equities D EUR",  i:"LU0203975437", q:196.843,   ctv0:100000, nav1:544.60,  c:"EUR"},
+  {n:"Invesco Global Total Return Bond FAM A",   i:"IE00BDRT7F43", q:1038.152,  ctv0:100000, nav1:95.40,   c:"EUR"},
+  {n:"Algebris Financial Credit Rd EUR Inc",     i:"IE00B8XCT900", q:1025.852,  ctv0:100000, nav1:94.76,   c:"EUR"},
+  {n:"Candriam Bonds Global HY C EUR Dis",       i:"LU0170293392", q:1056.636,  ctv0:100000, nav1:94.13,   c:"EUR"},
+  {n:"Invesco Pan Eur Hi Income FAM A EUR QDis", i:"LU2301396367", q:1079.832,  ctv0:100000, nav1:91.90,   c:"EUR"},
+  {n:"BNY Mellon Asian Opportunities",           i:"IE0003782467", q:10774.701, ctv0:41504,  nav1:3.91,    c:"EUR"},
+  {n:"Global Listed Infrastructure FAM L",       i:"IE0003TZCLU0", q:337.737,   ctv0:34118,  nav1:113.29,  c:"EUR"},
+  {n:"Janus Henderson Balanced A USD",           i:"IE0004445015", q:1085.078,  ctv0:46913,  nav1:47.67,   c:"USD"},
+  {n:"Janus Henderson Global Technology A USD",  i:"IE0009356076", q:2802.47,   ctv0:94255,  nav1:36.16,   c:"USD"},
+  {n:"Changing Lifestyles FAM L EUR",            i:"IE000AGQ3QC7", q:402.076,   ctv0:48160,  nav1:105.99,  c:"EUR"},
+  {n:"Flexible Equity Strategy FAM EUR",         i:"IE00BDRNRJ06", q:382.949,   ctv0:51352,  nav1:136.73,  c:"EUR"},
+  {n:"Infusive Consumer Alpha Global Leaders",   i:"IE00BMWWJX33", q:1261.983,  ctv0:129482, nav1:98.07,   c:"EUR"},
+  {n:"JPMorgan US Growth D USD",                 i:"LU0119065240", q:714.336,   ctv0:26458,  nav1:38.54,   c:"USD"},
+  {n:"HSBC GIF Hong Kong Equity EC",             i:"LU0164857640", q:286.883,   ctv0:39811,  nav1:152.14,  c:"USD"},
+  {n:"BGF World Technology E2 EUR",              i:"LU0171310955", q:1090.84,   ctv0:92492,  nav1:79.70,   c:"EUR"},
+  {n:"BGF World Mining E2 EUR",                  i:"LU0172157363", q:1032.20,   ctv0:59093,  nav1:76.10,   c:"EUR"},
+  {n:"BGF Continental European Flexible E",      i:"LU0224105980", q:1907.67,   ctv0:80675,  nav1:40.77,   c:"EUR"},
+  {n:"FF European High Yield E ACC EUR",         i:"LU0238209786", q:802.57,    ctv0:38708,  nav1:47.45,   c:"EUR"},
+  {n:"Nordea-1 Nordic Equity Small Cap BP",      i:"LU0278527428", q:328.677,   ctv0:17299,  nav1:48.91,   c:"EUR"},
+  {n:"Nordea-1 Nordic Equity Small Cap E",       i:"LU0278528822", q:1992.262,  ctv0:91180,  nav1:42.36,   c:"EUR"},
+  {n:"Lemanik SICAV High Growth Cap Retail",     i:"LU0284993374", q:257.282,   ctv0:101145, nav1:428.84,  c:"EUR"},
+  {n:"Allianz Oriental Income AT EUR",           i:"LU0348784041", q:133.377,   ctv0:57225,  nav1:514.01,  c:"EUR"},
+  {n:"Nordea-1 Global Climate Environment E",    i:"LU0348927251", q:1520.528,  ctv0:45141,  nav1:30.61,   c:"EUR"},
+  {n:"Pictet Global Megatrend Selection EUR",    i:"LU0391944815", q:53.608,    ctv0:16911,  nav1:297.34,  c:"EUR"},
+  {n:"Core Series Core Dividend E EUR Inc",      i:"LU0575777627", q:7521.059,  ctv0:62793,  nav1:8.82,    c:"EUR"},
+  {n:"Nordea-1 Stable Emerging Markets E EUR",   i:"LU0637343731", q:744.579,   ctv0:51674,  nav1:73.39,   c:"EUR"},
+  {n:"abrdn Global Small Mid Cap SDG A EUR",     i:"LU0728929174", q:1462.682,  ctv0:42551,  nav1:26.56,   c:"EUR"},
+  {n:"BNP Paribas Disruptive Technology N",      i:"LU0823422141", q:61.342,    ctv0:73583,  nav1:1175.92, c:"EUR"},
+  {n:"BNP Paribas Russia Equity (sospeso)",      i:"LU0823431720", q:290.024,   ctv0:28524,  nav1:null,    c:"EUR"},
+  {n:"JPMorgan Total Emerging Markets D EUR",    i:"LU0972618812", q:357.303,   ctv0:41740,  nav1:127.16,  c:"EUR"},
+  {n:"JPM Europe Equity Absolute Alpha D EUR",   i:"LU1176912761", q:264.53,    ctv0:39103,  nav1:154.82,  c:"EUR"},
+  {n:"GS Global Future Generations E EUR",       i:"LU1341142237", q:905.388,   ctv0:22843,  nav1:22.12,   c:"EUR"},
+  {n:"Morgan Stanley Europe Opportunity C",      i:"LU1394890807", q:680.828,   ctv0:30195,  nav1:44.20,   c:"USD"},
+  {n:"Candriam Equities Robotics C EUR",         i:"LU1502282632", q:262.157,   ctv0:109414, nav1:433.63,  c:"EUR"},
+  {n:"DWS Invest Artificial Intelligence LC",    i:"LU1863263346", q:85.12,     ctv0:21832,  nav1:238.89,  c:"EUR"},
+  {n:"ROBECO Smart Energy Equities D",           i:"LU2145461757", q:958.038,   ctv0:62416,  nav1:83.60,   c:"EUR"},
+  {n:"MFS Prudent Capital FAM L EUR",            i:"LU2358913288", q:451.867,   ctv0:51175,  nav1:107.53,  c:"EUR"},
+  {n:"Global Macro Credit FAM L EUR",            i:"LU2358922602", q:938.944,   ctv0:107607, nav1:114.59,  c:"EUR"},
+  {n:"JPM Middle East Africa Emerg D USD",       i:"LU2539337126", q:436.589,   ctv0:55100,  nav1:150.79,  c:"USD"},
+];
+
+const etfs = [
+  {n:"Amundi Prime Euro Govt Bd 0-1Y ETF Acc", isin:"LU2233156582", inv:1750000, prevPct:0.99,  navNow:21.52},
+  {n:"Vanguard S&P 500 ETF USD Acc",            isin:"IE00BFMXXD54", inv:875000,  prevPct:4.01,  navNow:107.24},
+  {n:"VanEck Morningstar Dev Mkts Div Leaders", isin:"NL0011683594",  inv:875000,  prevPct:17.70, navNow:51.97},
+];
+for (const e of etfs) {
+  e.navBuy = e.navNow / (1 + e.prevPct / 100);
+  e.units  = e.inv / e.navBuy;
+  e.valNow = e.units * e.navNow;
+  e.gain   = e.valNow - e.inv;
+  e.pct    = e.gain / e.inv * 100;
+}
+
+function ctv1(f) {
+  if (!f.nav1) return f.ctv0;
+  return f.c === 'USD' ? (f.q * f.nav1) / EURUSD : f.q * f.nav1;
+}
+function fi(v)    { return Math.round(v).toLocaleString('it-IT'); }
+function fe(v, d) { return Number(v).toLocaleString('it-IT', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+function fp(v)    { return (v >= 0 ? '+' : '') + v.toFixed(2) + '%'; }
+function fpp(v)   { return (v >= 0 ? '+' : '') + v.toFixed(3) + ' pp'; }
+function fq(q)    { return q >= 100 ? fi(q) : fe(q, 3); }
+
+/* ── ADVICE TAB ── */
+let aRef = 0, aNow = 0;
+const fundList = [];
+let n = 1, aHtml = '';
+
+for (const f of advice) {
+  if (f.sec) { aHtml += `<tr class="sec"><td colspan="8">${f.sec}</td></tr>`; continue; }
+  aRef += f.ctv0;
+  const c1 = ctv1(f);
+  aNow += c1;
+  const diff = c1 - f.ctv0, pct = diff / f.ctv0 * 100;
+  fundList.push({...f, c1, diff, pct});
+  const navStr = !f.nav1
+    ? `<span style="color:var(--red);font-size:10px">sospeso</span>`
+    : `${fe(f.nav1, 2)} <span class="mono">${f.c}</span>`;
+  const cls = !f.nav1 ? '' : diff >= 0 ? 'pos' : 'neg';
+  const bg = n % 2 === 0 ? 'background:var(--bg2)' : '';
+  aHtml += `<tr style="${bg}">
+    <td style="font-size:10px;color:var(--text3)">${n++}</td>
+    <td title="${f.n}">${f.n}</td>
+    <td class="mono">${f.i}</td>
+    <td class="r">${fq(f.q)}</td>
+    <td class="r">${fi(f.ctv0)}</td>
+    <td class="r">${navStr}</td>
+    <td class="r">${fi(c1)}</td>
+    <td class="r ${cls}">${f.nav1 ? fp(pct) : '—'}</td>
+  </tr>`;
+}
+const aDiff = aNow - aRef, aPct = aDiff / aRef * 100;
+document.getElementById('a-body').innerHTML = aHtml;
+document.getElementById('a-foot').innerHTML = `<tr>
+  <td colspan="3">TOTALE (44 posizioni)</td><td></td>
+  <td class="r">${fi(aRef)}</td><td></td>
+  <td class="r">${fi(aNow)}</td>
+  <td class="r ${aDiff >= 0 ? 'pos' : 'neg'}">${fp(aPct)}</td>
+</tr>`;
+const an = document.getElementById('a-now'); an.textContent = '€ ' + fi(aNow);
+const ad = document.getElementById('a-diff'); ad.textContent = (aDiff >= 0 ? '+' : '') + '€ ' + fi(aDiff); ad.className = 'kv ' + (aDiff >= 0 ? 'pos' : 'neg');
+const ap = document.getElementById('a-pct'); ap.textContent = fp(aPct); ap.className = 'kv ' + (aPct >= 0 ? 'pos' : 'neg');
+
+/* ── ETF TAB ── */
+const eRef = 3500000;
+const eNow  = etfs.reduce((s, e) => s + e.valNow, 0);
+const eGain = eNow - eRef, ePct = eGain / eRef * 100;
+document.getElementById('e-body').innerHTML = etfs.map(e => `<tr>
+  <td>${e.n}</td>
+  <td class="mono">${e.isin}</td>
+  <td class="r">${fi(e.inv)}</td>
+  <td class="r" style="color:var(--text3)">${fe(e.units, 1)}</td>
+  <td class="r">${fe(e.navBuy, 2)} €</td>
+  <td class="r">${fe(e.navNow, 2)} €</td>
+  <td class="r">${fi(e.valNow)}</td>
+  <td class="r pos">+${fi(e.gain)}</td>
+  <td class="r pos">${fp(e.pct)}</td>
+</tr>`).join('');
+document.getElementById('e-foot').innerHTML = `<tr>
+  <td colspan="2">TOTALE ETF</td>
+  <td class="r">${fi(eRef)}</td><td></td><td></td>
+  <td class="r pos">${fi(eNow)}</td><td></td>
+  <td class="r pos">+${fi(eGain)}</td>
+  <td class="r pos">${fp(ePct)}</td>
+</tr>`;
+document.getElementById('e-now').textContent  = '€ ' + fi(eNow);
+document.getElementById('e-diff').textContent = '+€ ' + fi(eGain);
+document.getElementById('e-pct').textContent  = fp(ePct);
+
+/* ── COMPARAZIONE TAB ── */
+const vDelta = aNow - eNow, pDelta = aPct - ePct;
+document.getElementById('c-a-inv').textContent = '€ ' + fi(aRef);
+document.getElementById('c-a-now').textContent = '€ ' + fi(aNow);
+const cap = document.getElementById('c-a-pct'); cap.textContent = fp(aPct); cap.className = 'kv ' + (aPct >= 0 ? 'pos' : 'neg');
+document.getElementById('c-e-now').textContent = '€ ' + fi(eNow);
+document.getElementById('c-e-pct').textContent = fp(ePct);
+if (aPct > ePct) document.getElementById('p-a').classList.add('winner');
+else             document.getElementById('p-e').classList.add('winner');
+
+const cmpRows = [
+  ["Capitale investito",       "€ "+fi(aRef),             "€ "+fi(eRef),   (aRef-eRef>=0?"+":"")+fi(aRef-eRef),    ""],
+  ["Valore oggi",              "€ "+fi(aNow),             "€ "+fi(eNow),   (vDelta>=0?"+":"")+fi(vDelta),            vDelta>=0?"pos":"neg"],
+  ["Guadagno €",              (aDiff>=0?"+":"")+"€ "+fi(aDiff), "+€ "+fi(eGain), (aDiff-eGain>=0?"+":"")+"€ "+fi(aDiff-eGain), aDiff>=eGain?"pos":"neg"],
+  ["Rendimento %",             fp(aPct),                  fp(ePct),        (pDelta>=0?"+":"")+pDelta.toFixed(2)+" pp", pDelta>=0?"pos":"neg"],
+  ["Numero strumenti",         "44 fondi / prodotti",     "3 ETF",         "−41 strumenti",                          ""],
+  ["TER annuo stimato",        "~1,5 – 2,5%",             "~0,10 – 0,22%", "ETF molto più economico",                ""],
+  ["Liquidità",                "T+3 / T+5 (fondi UCITS)", "T+2 (borsa)",   "ETF più liquido",                        ""],
+  ["Diversificazione",         "Alta — multi-asset globale","Media — 3 macro-cat.", "Advice+ più diversificato",     ""],
+];
+document.getElementById('c-body').innerHTML = cmpRows.map(r => `<tr>
+  <td style="font-weight:600">${r[0]}</td>
+  <td class="r"><span class="badge b-f">${r[1]}</span></td>
+  <td class="r"><span class="badge b-e">${r[2]}</span></td>
+  <td class="r ${r[4]}">${r[3]}</td>
+</tr>`).join('');
+
+const real = fundList.filter(f => f.nav1);
+const sorted = [...real].sort((a, b) => b.pct - a.pct);
+let i = 0;
+document.getElementById('top3-body').innerHTML = sorted.slice(0, 3).map(f => `<tr>
+  <td style="font-size:10px;color:var(--text3)">${++i}</td>
+  <td>${f.n}</td>
+  <td class="r">${fi(f.ctv0)}</td>
+  <td class="r">${fi(f.c1)}</td>
+  <td class="r pos">${fp(f.pct)}</td>
+  <td class="r pos">${fpp(f.diff / aRef * 100)}</td>
+</tr>`).join('');
+i = 0;
+document.getElementById('bot3-body').innerHTML = sorted.slice(-3).reverse().map(f => `<tr>
+  <td style="font-size:10px;color:var(--text3)">${++i}</td>
+  <td>${f.n}</td>
+  <td class="r">${fi(f.ctv0)}</td>
+  <td class="r">${fi(f.c1)}</td>
+  <td class="r neg">${fp(f.pct)}</td>
+  <td class="r neg">${fpp(f.diff / aRef * 100)}</td>
+</tr>`).join('');
+
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['advice','etf','cmp'][i] === id);
+  });
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+}
+</script>
+</body>
+</html>
