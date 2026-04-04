@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Portafoglio Advice+ 2021–2025 vs S&P 500</title>
+<style>
+/* ── PORTFOLIO DESIGN SYSTEM v1.0 (inline) ─────────────────── */
+:root {
+  --bg:#ffffff;--bg2:#f7f7f5;--bg3:#efefed;
+  --text:#1a1a1a;--text2:#555552;--text3:#888885;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --green:#2e7d32;--green-bg:#e8f5e9;
+  --red:#c62828;--red-bg:#fdecea;
+  --blue:#1565c0;--blue-bg:#e3f2fd;
+  --amber:#BA7517;--amber-bg:#FAEEDA;
+  --c-blue:#378ADD;--c-teal:#1D9E75;--c-coral:#D85A30;
+  --c-amber:#BA7517;--c-purple:#7F77DD;--c-gray:#888780;
+  --c-green:#639922;--c-pink:#D4537E;
+  --radius:8px;--radius-lg:12px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1e1e1e;--bg2:#2a2a2a;--bg3:#333333;
+  --text:#e8e8e8;--text2:#aaaaaa;--text3:#777777;
+  --border:rgba(255,255,255,0.12);--border2:rgba(255,255,255,0.22);
+  --green:#66bb6a;--green-bg:#1b3a1e;
+  --red:#ef9a9a;--red-bg:#3e1a1a;
+  --blue:#64b5f6;--blue-bg:#1a2e3e;
+  --amber:#FAC775;--amber-bg:#412402;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg);line-height:1.5}
+header{padding:24px 32px 20px;border-bottom:1px solid var(--border)}
+header h1{font-size:20px;font-weight:600;margin-bottom:4px}
+header p{font-size:12px;color:var(--text3)}
+.container{max-width:1100px;margin:0 auto;padding:20px 24px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab{padding:9px 22px;cursor:pointer;border:none;background:transparent;font-size:13px;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:var(--font);border-radius:var(--radius) var(--radius) 0 0;transition:color .15s;white-space:nowrap}
+.tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
+.tab:hover:not(.active){color:var(--text);background:var(--bg2)}
+.pane{display:none}.pane.active{display:block}
+.kpi-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:20px}
+@media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--bg2);border-radius:var(--radius);padding:12px 14px}
+.kpi.bad{background:var(--red-bg)}.kpi.good{background:var(--green-bg)}
+.kl{font-size:11px;color:var(--text3);margin-bottom:4px}
+.kv{font-size:18px;font-weight:600}
+.pos{color:var(--green)}.neg{color:var(--red)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:7px 8px;border-bottom:1px solid var(--border2);font-size:11px;color:var(--text2);font-weight:600;text-align:left;white-space:nowrap;background:var(--bg2)}
+th.r{text-align:right}
+td{padding:5px 8px;border-bottom:0.5px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+td.r{text-align:right;max-width:none}
+tr:hover td{background:var(--bg2)}
+tfoot td{font-weight:600;border-top:1px solid var(--border2);background:var(--bg2);padding:7px 8px;white-space:nowrap}
+.sec td{font-size:11px;font-weight:600;color:var(--text2);background:var(--bg3);padding:4px 8px;border-bottom:0.5px solid var(--border);white-space:nowrap;max-width:none}
+.mono{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.note{font-size:11px;color:var(--text3);margin-top:12px;line-height:1.6}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-blue{background:var(--blue-bg);color:var(--blue)}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+.two-panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:600px){.two-panels{grid-template-columns:1fr}}
+.cmp-panel{border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+.cmp-panel.winner{border-color:var(--green)}.cmp-panel.loser{border-color:var(--red)}
+.cmp-title{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.winner .cmp-title{color:var(--green)}.loser .cmp-title{color:var(--red)}
+.cmp-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:14px}
+.card.warn{border-color:var(--red);border-width:1.5px}
+.card.ok{border-color:var(--green);border-width:1.5px}
+.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:600px){.g2{grid-template-columns:1fr}}
+.score-ring{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 0 10px}
+.ring{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
+.ring-bad{border:4px solid var(--red);color:var(--red);background:var(--red-bg)}
+.ring-good{border:4px solid var(--green);color:var(--green);background:var(--green-bg)}
+.ring-label{font-size:11px;color:var(--text2);text-align:center;font-weight:500}
+.ovl-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ovl-label{font-size:11px;color:var(--text2);min-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){.ovl-label{min-width:100px;font-size:10px}}
+.ovl-track{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.ovl-fill{height:6px;border-radius:3px}
+.ovl-pct{font-size:11px;font-weight:500;color:var(--text);width:40px;text-align:right;flex-shrink:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.legend-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.divider{height:1px;background:var(--border);margin:20px 0}
+.section-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px}
+.chart-wrap{position:relative;width:100%}
+footer{margin-top:32px;padding:16px 32px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);line-height:1.7}
+
+/* ── EXTRA: alert box, cost row ──────────────────────────────── */
+.alert{border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;font-size:12px;line-height:1.6;border-left:3px solid}
+.alert strong{font-weight:600}
+.alert-red{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.alert-amber{background:var(--amber-bg);border-color:var(--amber);color:var(--amber)}
+.alert-blue{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.alert-green{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.highlight-row td{background:var(--red-bg)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Performance Portafoglio Advice+ 2021–2025 vs S&P 500</h1>
+  <p>Piano 1873457 – Dossier 8178168 &nbsp;·&nbsp; Dati MWRR: monitoraggio Fineco &nbsp;·&nbsp; NAV fondi: 04/04/2026 &nbsp;·&nbsp; Benchmark: Vanguard S&P 500 UCITS ETF (VUAA, IE00BFMXXD54) in EUR</p>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('perf')">Performance</button>
+    <button class="tab" onclick="showTab('grow')">Crescita €1M</button>
+    <button class="tab" onclick="showTab('divers')">Diversificazione</button>
+    <button class="tab" onclick="showTab('fondi')">Dettaglio fondi (12)</button>
+    <button class="tab" onclick="showTab('costi')">Costi vs guadagni</button>
+    <button class="tab" onclick="showTab('concl')">Conclusioni</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 1 — PERFORMANCE
+       ════════════════════════════════════════════════════════════ -->
+  <div class="pane active" id="pane-perf">
+    <div class="kpi-row">
+      <div class="kpi bad"><div class="kl">Rendimento cumulato PTF</div><div class="kv neg" id="k-ptf-cum">—</div></div>
+      <div class="kpi good"><div class="kl">Rendimento S&P 500 EUR</div><div class="kv pos">+77,8%</div></div>
+      <div class="kpi bad"><div class="kl">Sottoperformance</div><div class="kv neg">−75,0 pp</div></div>
+      <div class="kpi"><div class="kl">Periodo monitorato</div><div class="kv">4 anni 3 mesi</div></div>
+    </div>
+
+    <div class="section-label">Rendimento anno per anno</div>
+    <div class="chart-wrap" style="height:280px;margin-bottom:20px"><canvas id="ch-perf"></canvas></div>
+    <div class="legend" style="margin-bottom:16px">
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--red)"></span>Portafoglio Advice+ (MWRR)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--blue)"></span>S&P 500 in EUR (SXR8, total return)</span>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:90px">Periodo</th>
+          <th class="r">PTF Advice+</th>
+          <th class="r">S&P 500 EUR</th>
+          <th class="r">Delta</th>
+          <th>Giudizio</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>2021</td><td class="r">+12,91%</td><td class="r pos">+39,07%</td><td class="r neg">−26,16 pp</td><td><span class="badge badge-red">Grave</span></td></tr>
+          <tr><td>2022</td><td class="r neg">−17,68%</td><td class="r neg">−13,30%</td><td class="r neg">−4,38 pp</td><td><span class="badge badge-red">Negativo</span></td></tr>
+          <tr><td>2023</td><td class="r">+5,77%</td><td class="r pos">+21,54%</td><td class="r neg">−15,77 pp</td><td><span class="badge badge-red">Grave</span></td></tr>
+          <tr><td>2024</td><td class="r">+13,11%</td><td class="r pos">+32,62%</td><td class="r neg">−19,51 pp</td><td><span class="badge badge-red">Grave</span></td></tr>
+          <tr><td>Q1 2025</td><td class="r neg">−7,56%</td><td class="r neg">≈ −8,50%</td><td class="r">+0,94 pp</td><td><span class="badge badge-amber">Neutro</span></td></tr>
+        </tbody>
+        <tfoot><tr>
+          <td>Cumulato</td><td class="r neg">+2,8%</td><td class="r pos">+77,8%</td><td class="r neg">−75,0 pp</td><td><span class="badge badge-red">Critico</span></td>
+        </tr></tfoot>
+      </table>
+    </div>
+
+    <p class="note">Il portafoglio ha sottoperformato il benchmark in tutti e 4 gli anni completi. Nel 2022, unico anno negativo per i mercati, ha perso più del benchmark (−17,7% vs −13,3%): nessuna protezione dal ribasso. Ha catturato solo il 27-40% dei rialzi ma il 133% dei ribassi.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 2 — CRESCITA €1M
+       ════════════════════════════════════════════════════════════ -->
+  <div class="pane" id="pane-grow">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kl">Investito Gen 2021</div><div class="kv">€ 1.000.000</div></div>
+      <div class="kpi bad"><div class="kl">Valore PTF Mar 2025</div><div class="kv neg" id="k-g-ptf">—</div></div>
+      <div class="kpi good"><div class="kl">Valore S&P 500 EUR</div><div class="kv pos" id="k-g-sp">—</div></div>
+      <div class="kpi bad"><div class="kl">Costo opportunità</div><div class="kv neg" id="k-g-diff">—</div></div>
+    </div>
+
+    <div class="chart-wrap" style="height:320px;margin-bottom:14px"><canvas id="ch-cum"></canvas></div>
+    <div class="legend" style="margin-bottom:20px">
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--red)"></span>Portafoglio Advice+ → <strong id="leg-ptf">—</strong></span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--blue)"></span>S&P 500 EUR → <strong id="leg-sp">—</strong></span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--text3);opacity:.5"></span>50/50 Cash + S&P 500 → <strong id="leg-half">—</strong></span>
+    </div>
+
+    <div class="two-panels">
+      <div class="cmp-panel loser">
+        <div class="cmp-title">Portafoglio Advice+ — 12 fondi attivi</div>
+        <div class="cmp-kpi">
+          <div class="kpi"><div class="kl">Investito</div><div class="kv">€ 1.000K</div></div>
+          <div class="kpi"><div class="kl">Valore finale</div><div class="kv" id="p-a-v">—</div></div>
+          <div class="kpi"><div class="kl">Guadagno</div><div class="kv" id="p-a-g">—</div></div>
+        </div>
+      </div>
+      <div class="cmp-panel winner">
+        <div class="cmp-title">Vanguard S&P 500 — 1 ETF passivo</div>
+        <div class="cmp-kpi">
+          <div class="kpi"><div class="kl">Investito</div><div class="kv">€ 1.000K</div></div>
+          <div class="kpi"><div class="kl">Valore finale</div><div class="kv pos" id="p-e-v">—</div></div>
+          <div class="kpi"><div class="kl">Guadagno</div><div class="kv pos" id="p-e-g">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-red" style="font-size:13px;text-align:center;padding:14px 18px">
+      <strong>Mancato guadagno stimato su €1M: <span id="al-miss">—</span></strong><br>
+      Anche la strategia più conservativa 50% cash + 50% S&P 500 avrebbe generato <strong id="al-half">—</strong> in più rispetto al portafoglio gestito.
+    </div>
+
+    <p class="note">Calcolo basato sui rendimenti MWRR annuali del portafoglio vs rendimenti totali dell'indice S&P 500 in EUR (fonte: iShares Core S&P 500 SXR8). La strategia 50/50 ipotizza 50% equity + 50% cash remunerato (0,5% 2021, 1% 2022, 2% 2023, 3% 2024, 1,5% Q1 2025 annualizzato). Rendimenti passati non garantiscono quelli futuri.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 3 — DIVERSIFICAZIONE
+       ════════════════════════════════════════════════════════════ -->
+  <div class="pane" id="pane-divers">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kl">Numero fondi</div><div class="kv">12</div></div>
+      <div class="kpi"><div class="kl">Controvalore</div><div class="kv">€ 301.173</div></div>
+      <div class="kpi"><div class="kl">Media per posizione</div><div class="kv">€ 25.098</div></div>
+      <div class="kpi"><div class="kl">★ Morningstar medio</div><div class="kv">3,27</div></div>
+    </div>
+
+    <div class="g2">
+      <div>
+        <div class="section-label">Per tipo di strategia</div>
+        <div class="chart-wrap" style="height:210px"><canvas id="ch-pie1"></canvas></div>
+        <div class="legend" style="margin-bottom:12px">
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-purple)"></span>Az. growth/tematico 37%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-blue)"></span>Az. settoriale 23%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-teal)"></span>Bilanciato 14%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-amber)"></span>Flessibile 14%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-coral)"></span>Alt. high vol 13%</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Per area geografica</div>
+        <div class="chart-wrap" style="height:210px"><canvas id="ch-pie2"></canvas></div>
+        <div class="legend" style="margin-bottom:12px">
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-purple)"></span>Globale 45%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-blue)"></span>Europa 18%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-teal)"></span>Nord America 7%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-amber)"></span>Sett. globale 23%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-coral)"></span>EM / Asia 7%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Criticità individuate</div>
+
+    <div class="alert alert-red"><strong>Concentrazione settoriale:</strong> BGF World Mining pesa il 15,9% del portafoglio — una singola scommessa sulle materie prime eccessiva per un portafoglio che dovrebbe essere diversificato.</div>
+    <div class="alert alert-red"><strong>Sovrapposizione tematica:</strong> Pictet Megatrend + Amundi Disruptive + GS Future Generations = 3 fondi growth simili (16,9% totale). Correlazione elevata, triplicazione dei costi.</div>
+    <div class="alert alert-amber"><strong>Posizioni marginali:</strong> JPM China (3,7%) e JPM Middle East Africa (3,4%) sono troppo piccole per incidere sulla performance, ma aggiungono volatilità e costi.</div>
+    <div class="alert alert-amber"><strong>Rating bassi:</strong> 6 fondi su 12 con ★ Morningstar ≤ 4. Il 36,5% del controvalore è investito in fondi con rating 3-4 stelle.</div>
+    <div class="alert alert-blue"><strong>Nessun fondo passivo:</strong> tutti e 12 sono a gestione attiva con classi retail (D, E, R, BP). Nessun ETF a basso costo è mai stato utilizzato nel piano.</div>
+
+    <div class="divider"></div>
+    <div class="section-label">Distribuzione rating Morningstar (% controvalore)</div>
+    <div class="ovl-row"><div class="ovl-label">★★★★★ (score 10)</div><div class="ovl-track"><div class="ovl-fill" style="width:40.3%;background:var(--green)"></div></div><div class="ovl-pct pos">40,3%</div></div>
+    <div class="ovl-row"><div class="ovl-label">★★★★ (score 7-9)</div><div class="ovl-track"><div class="ovl-fill" style="width:19.8%;background:var(--blue)"></div></div><div class="ovl-pct" style="color:var(--blue)">19,8%</div></div>
+    <div class="ovl-row"><div class="ovl-label">★★★ (score 3-4)</div><div class="ovl-track"><div class="ovl-fill" style="width:36.5%;background:var(--red)"></div></div><div class="ovl-pct neg">36,5%</div></div>
+    <div class="ovl-row"><div class="ovl-label">N.D.</div><div class="ovl-track"><div class="ovl-fill" style="width:3.4%;background:var(--text3)"></div></div><div class="ovl-pct">3,4%</div></div>
+
+    <p class="note">Dati composizione: monitoraggio Fineco Advice+ al 30/04/2025. Rating Morningstar e Final Score Advice dal medesimo report.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 4 — DETTAGLIO FONDI
+       ════════════════════════════════════════════════════════════ -->
+  <div class="pane" id="pane-fondi">
+    <div class="section-label">I 12 fondi nel portafoglio — ordinati per peso decrescente</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:24px">#</th>
+          <th style="width:250px">Fondo</th>
+          <th>Microcategoria</th>
+          <th class="r">Ctv €</th>
+          <th class="r">Peso %</th>
+          <th class="r">★ M.star</th>
+          <th class="r">Score Advice</th>
+        </tr></thead>
+        <tbody id="fund-body"></tbody>
+        <tfoot><tr>
+          <td colspan="3">TOTALE (12 fondi)</td>
+          <td class="r">301.173</td>
+          <td class="r">100,00%</td>
+          <td class="r">3,27</td>
+          <td class="r">6,99</td>
+        </tr></tfoot>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Peso per fondo (barra orizzontale)</div>
+    <div class="chart-wrap" style="height:300px;margin-bottom:10px"><canvas id="ch-hbar"></canvas></div>
+
+    <p class="note">Controvalore e peso da monitoraggio Fineco al 30/04/2025. Rating Morningstar su scala 1-5 stelle (qui normalizzato su Score 1-10). Final Score Advice è lo score proprietario Fineco.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 5 — COSTI VS GUADAGNI
+       ════════════════════════════════════════════════════════════ -->
+  <div class="pane" id="pane-costi">
+
+    <div class="section-label">Il rapporto tra costi e guadagni</div>
+
+    <div class="g2" style="margin-bottom:20px">
+      <div class="score-ring">
+        <div class="ring ring-bad">281%</div>
+        <div class="ring-label">Rapporto costi / guadagni<br>Portafoglio Advice+</div>
+      </div>
+      <div class="score-ring">
+        <div class="ring ring-good">0,4%</div>
+        <div class="ring-label">Rapporto costi / guadagni<br>Vanguard S&P 500 ETF</div>
+      </div>
+    </div>
+
+    <div class="alert alert-red" style="font-size:14px;text-align:center;padding:16px 20px;font-weight:600">
+      I costi della gestione attiva (~€ 23.670) hanno superato i guadagni del portafoglio (~€ 8.430).<br>
+      <span style="font-size:12px;font-weight:400">Per ogni €1 guadagnato, il portafoglio ha pagato circa €2,80 in commissioni di gestione.</span>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Comparazione costi</div>
+
+    <div class="two-panels">
+      <div class="cmp-panel loser">
+        <div class="cmp-title">Advice+ — 12 fondi gestione attiva</div>
+        <div class="kpi"><div class="kl">TER medio ponderato</div><div class="kv neg">~1,85%</div></div>
+        <div class="kpi" style="margin-top:8px"><div class="kl">Costi annui su €301K</div><div class="kv neg">~€ 5.570</div></div>
+        <div class="kpi" style="margin-top:8px"><div class="kl">Costi totali 4,25 anni</div><div class="kv neg">~€ 23.670</div></div>
+        <div class="kpi bad" style="margin-top:8px"><div class="kl">Guadagno netto 4,25 anni</div><div class="kv neg">~€ 8.430</div></div>
+      </div>
+      <div class="cmp-panel winner">
+        <div class="cmp-title">VUAA — 1 ETF passivo</div>
+        <div class="kpi"><div class="kl">TER</div><div class="kv pos">0,07%</div></div>
+        <div class="kpi" style="margin-top:8px"><div class="kl">Costi annui su €301K</div><div class="kv pos">~€ 211</div></div>
+        <div class="kpi" style="margin-top:8px"><div class="kl">Costi totali 4,25 anni</div><div class="kv pos">~€ 897</div></div>
+        <div class="kpi good" style="margin-top:8px"><div class="kl">Guadagno netto 4,25 anni</div><div class="kv pos">~€ 234.000</div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Dettaglio metriche</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:260px">Metrica</th>
+          <th class="r"><span class="badge badge-red">Advice+ 12 fondi</span></th>
+          <th class="r"><span class="badge badge-green">VUAA 1 ETF</span></th>
+          <th class="r">Differenza</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>TER annuo</td><td class="r">~1,85%</td><td class="r">0,07%</td><td class="r neg">26× più caro</td></tr>
+          <tr><td>Costo annuo su €301K</td><td class="r neg">€ 5.570</td><td class="r pos">€ 211</td><td class="r neg">+€ 5.359</td></tr>
+          <tr><td>Costi cumulati 4,25 anni</td><td class="r neg">€ 23.670</td><td class="r pos">€ 897</td><td class="r neg">+€ 22.773</td></tr>
+          <tr><td>Guadagno portafoglio 4,25 anni</td><td class="r">~€ 8.430</td><td class="r pos">~€ 234.000</td><td class="r neg">−€ 225.570</td></tr>
+          <tr class="highlight-row"><td style="font-weight:600">Rapporto costi / guadagno</td><td class="r neg" style="font-weight:600">281%</td><td class="r pos" style="font-weight:600">0,4%</td><td class="r neg" style="font-weight:600">Costi &gt; guadagni</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Proiezione su €6M a regime</div>
+    <div class="kpi-row" style="grid-template-columns:repeat(3,1fr)">
+      <div class="kpi bad"><div class="kl">Costo annuo Advice+ (stima)</div><div class="kv neg">€ 111.000</div></div>
+      <div class="kpi good"><div class="kl">Costo annuo VUAA</div><div class="kv pos">€ 4.200</div></div>
+      <div class="kpi good"><div class="kl">Risparmio annuo</div><div class="kv pos">€ 106.800</div></div>
+    </div>
+
+    <p class="note">TER stimati dai KIID ufficiali dei fondi. Guadagno PTF = +2,8% × €301K. Guadagno VUAA = +77,8% × €301K. Proiezione €6M assume stesso mix di costi TER. Non sono incluse eventuali commissioni di performance applicate da singoli fondi.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       TAB 6 — CONCLUSIONI
+       ════════════════════════════════════════════════════════════ -->
+  <div class="pane" id="pane-concl">
+
+    <div class="section-label">Riepilogo criticità</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:70px">Gravità</th>
+          <th>Problema</th>
+          <th style="width:240px">Impatto misurato</th>
+        </tr></thead>
+        <tbody>
+          <tr class="highlight-row"><td><span class="badge badge-red">Critico</span></td><td>I costi hanno superato i guadagni</td><td class="neg">€23.670 costi vs €8.430 guadagno</td></tr>
+          <tr><td><span class="badge badge-red">Critico</span></td><td>Sottoperformance strutturale in 4 anni su 4</td><td class="neg">−75 pp cumulati vs benchmark</td></tr>
+          <tr><td><span class="badge badge-red">Critico</span></td><td>Nessuna protezione nei ribassi (2022: −17,7% vs −13,3%)</td><td class="neg">−4,4 pp peggio del benchmark</td></tr>
+          <tr><td><span class="badge badge-amber">Alto</span></td><td>Concentrazione materie prime (BGF Mining 15,9%)</td><td>Scommessa settoriale singola</td></tr>
+          <tr><td><span class="badge badge-amber">Alto</span></td><td>Sovrapposizione tematica (3 fondi growth simili)</td><td>16,9% in fondi correlati, tripli costi</td></tr>
+          <tr><td><span class="badge badge-amber">Alto</span></td><td>Posizioni marginali inutili (&lt;5%)</td><td>Complessità senza beneficio</td></tr>
+          <tr><td><span class="badge badge-blue">Medio</span></td><td>Solo fondi attivi, nessun ETF passivo</td><td>TER 26× superiore al benchmark</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Strategia alternativa proposta</div>
+    <div class="card ok">
+      <div class="card-title" style="color:var(--green)">Portafoglio semplice, trasparente, a basso costo</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Componente</th><th class="r">Peso</th><th>Strumento</th><th class="r">TER</th></tr></thead>
+          <tbody>
+            <tr><td>Stabilità / liquidità</td><td class="r">50%</td><td>Titoli di Stato breve termine / Cash remunerato</td><td class="r">0,00 – 0,15%</td></tr>
+            <tr><td>Crescita</td><td class="r">50%</td><td>Vanguard S&P 500 (VUAA) o VanEck TDIV</td><td class="r">0,07 – 0,38%</td></tr>
+          </tbody>
+          <tfoot><tr>
+            <td colspan="2">Costo totale annuo su €6M</td><td></td><td class="r pos" style="font-size:14px">€ 2.100 – 4.200</td>
+          </tr></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="kpi-row" style="grid-template-columns:repeat(3,1fr)">
+      <div class="kpi good"><div class="kl">Risparmio costi annuo</div><div class="kv pos">€ 107K</div></div>
+      <div class="kpi"><div class="kl">Strumenti totali</div><div class="kv">2</div></div>
+      <div class="kpi good"><div class="kl">Trasparenza</div><div class="kv pos">Totale</div></div>
+    </div>
+
+    <p class="note">Questo documento è un'analisi indipendente basata su dati MWRR forniti da Fineco e rendimenti pubblicamente disponibili. Non costituisce consulenza finanziaria personalizzata. I rendimenti passati non sono indicativi di quelli futuri. Il confronto con il S&P 500 puro (100% equity USA) rappresenta un benchmark aggressivo; tuttavia, anche strategie molto più conservative avrebbero nettamente sovraperformato il portafoglio analizzato.</p>
+  </div>
+</div>
+
+<footer>
+  Piano Finanziario 1873457 – Dossier 8178168 &nbsp;·&nbsp; Dati MWRR: monitoraggio Fineco Advice+, periodo 01/01/2021 – 31/03/2025.
+  Benchmark: iShares Core S&P 500 (SXR8) rendimento totale in EUR senza hedging valutario (fonte: eupersonalfinance.eu, Yahoo Finance).
+  NAV fondi aggiornati al 04/04/2026 &nbsp;·&nbsp; TER stimati da KIID ufficiali.
+  I rendimenti passati non garantiscono quelli futuri &nbsp;·&nbsp; Non costituisce consulenza finanziaria.
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ── Utility ── */
+function fi(v){ return Math.round(v).toLocaleString('it-IT'); }
+function fp(v){ return (v>=0?'+':'')+v.toFixed(2)+'%'; }
+const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+const C = {
+  red: isDark?'#ef9a9a':'#c62828',
+  blue: isDark?'#64b5f6':'#1565c0',
+  green: isDark?'#66bb6a':'#2e7d32',
+  gray: isDark?'#777777':'#888885',
+  amber: isDark?'#FAC775':'#BA7517',
+  purple: '#7F77DD', teal: '#1D9E75', coral: '#D85A30',
+  grid: isDark?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.06)',
+  tick: isDark?'rgba(255,255,255,0.5)':'rgba(0,0,0,0.45)'
+};
+
+/* ── Tab switcher ── */
+const TAB_IDS = ['perf','grow','divers','fondi','costi','concl'];
+function showTab(id){
+  TAB_IDS.forEach((t,i)=>{
+    document.querySelectorAll('.tab')[i].classList.toggle('active', t===id);
+  });
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+}
+
+/* ══════ TAB 1: PERFORMANCE BAR CHART ══════ */
+new Chart(document.getElementById('ch-perf'),{
+  type:'bar',
+  data:{
+    labels:['2021','2022','2023','2024','Q1 2025'],
+    datasets:[
+      {label:'Advice+',data:[12.91,-17.68,5.77,13.11,-7.56],backgroundColor:C.red,borderRadius:3,barPercentage:.65},
+      {label:'S&P 500 EUR',data:[39.07,-13.30,21.54,32.62,-8.50],backgroundColor:C.blue,borderRadius:3,barPercentage:.65}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}},
+    scales:{
+      y:{ticks:{callback:v=>v+'%',color:C.tick,font:{size:11}},grid:{color:C.grid},border:{display:false}},
+      x:{ticks:{color:C.tick,font:{size:12},autoSkip:false},grid:{display:false},border:{display:false}}
+    }
+  }
+});
+document.getElementById('k-ptf-cum').textContent = '+2,8%';
+
+/* ══════ TAB 2: CUMULATIVE LINE (€1M) ══════ */
+const ptfR=[12.91,-17.68,5.77,13.11,-7.56];
+const spR =[39.07,-13.30,21.54,32.62,-8.50];
+const cashR=[0.50, 1.00, 2.00, 3.00, 0.75]; // cash annualizzato semplificato
+const halfR=spR.map((s,i)=> s/2 + cashR[i]/2 );
+let pC=[1000000],sC=[1000000],hC=[1000000];
+for(let i=0;i<ptfR.length;i++){
+  pC.push(Math.round(pC[i]*(1+ptfR[i]/100)));
+  sC.push(Math.round(sC[i]*(1+spR[i]/100)));
+  hC.push(Math.round(hC[i]*(1+halfR[i]/100)));
+}
+const pEnd=pC[5], sEnd=sC[5], hEnd=hC[5];
+
+document.getElementById('k-g-ptf').textContent  = '€ '+fi(pEnd);
+document.getElementById('k-g-sp').textContent    = '€ '+fi(sEnd);
+document.getElementById('k-g-diff').textContent  = '−€ '+fi(sEnd-pEnd);
+document.getElementById('p-a-v').textContent     = '€ '+fi(pEnd);
+document.getElementById('p-a-v').className       = 'kv '+(pEnd>=1000000?'pos':'neg');
+document.getElementById('p-a-g').textContent     = (pEnd>=1000000?'+':'')+'€ '+fi(pEnd-1000000);
+document.getElementById('p-a-g').className       = 'kv '+(pEnd>=1000000?'pos':'neg');
+document.getElementById('p-e-v').textContent     = '€ '+fi(sEnd);
+document.getElementById('p-e-g').textContent     = '+€ '+fi(sEnd-1000000);
+document.getElementById('al-miss').textContent   = '€ '+fi(sEnd-pEnd);
+document.getElementById('al-half').textContent   = '€ '+fi(hEnd-pEnd);
+document.getElementById('leg-ptf').textContent   = '€ '+fi(pEnd);
+document.getElementById('leg-sp').textContent    = '€ '+fi(sEnd);
+document.getElementById('leg-half').textContent  = '€ '+fi(hEnd);
+
+new Chart(document.getElementById('ch-cum'),{
+  type:'line',
+  data:{
+    labels:['Gen 2021','Dic 2021','Dic 2022','Dic 2023','Dic 2024','Mar 2025'],
+    datasets:[
+      {label:'Advice+',data:pC,borderColor:C.red,backgroundColor:isDark?'rgba(239,154,154,0.06)':'rgba(198,40,40,0.06)',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:C.red,borderWidth:2.5},
+      {label:'S&P 500 EUR',data:sC,borderColor:C.blue,backgroundColor:isDark?'rgba(100,181,246,0.06)':'rgba(21,101,192,0.06)',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:C.blue,borderWidth:2.5},
+      {label:'50/50',data:hC,borderColor:C.gray,backgroundColor:'transparent',borderDash:[6,4],tension:.3,pointRadius:3,pointBackgroundColor:C.gray,borderWidth:1.5}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': € '+fi(c.parsed.y)}}},
+    scales:{
+      y:{ticks:{callback:v=>'€ '+fi(v),color:C.tick,font:{size:11}},grid:{color:C.grid},border:{display:false},min:700000},
+      x:{ticks:{color:C.tick,font:{size:11},autoSkip:false,maxRotation:25},grid:{display:false},border:{display:false}}
+    }
+  }
+});
+
+/* ══════ TAB 3: PIE CHARTS ══════ */
+const pieOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'50%'};
+const palette = [C.purple, C.blue, C.teal, C.amber, C.coral];
+new Chart(document.getElementById('ch-pie1'),{type:'doughnut',data:{labels:['Az.growth','Az.sett.','Bilan.','Fless.','Alt.'],datasets:[{data:[36.7,23.3,14.1,13.5,12.7],backgroundColor:palette,borderWidth:0}]},options:pieOpts});
+new Chart(document.getElementById('ch-pie2'),{type:'doughnut',data:{labels:['Globale','Europa','N.America','Sett.glob.','EM/Asia'],datasets:[{data:[45.4,17.9,7.2,23.3,7.1],backgroundColor:palette,borderWidth:0}]},options:pieOpts});
+
+/* ══════ TAB 4: FUND TABLE + HORIZONTAL BAR ══════ */
+const funds=[
+  [1,'BGF World Mining E','Materie prime',47863,'15,89',3,3],
+  [2,'Janus Henderson Balanced A USD','Bilanciato',42323,'14,05',10,10],
+  [3,'Global Macro Credit FAM L','Flessibile',40805,'13,55',10,10],
+  [4,'JPM Europe Eq. Abs. Alpha D','Alt. high vol',38140,'12,66',10,12],
+  [5,'BGF World Technology E2','Tecnologia',22335,'7,42',7,7],
+  [6,'JPM US Growth D USD','US Growth',21782,'7,23',8,8],
+  [7,'GS Global Future Generations E','Intl. Growth',19212,'6,38',4,4],
+  [8,'Amundi CPR Disruptive Opp A','Intl. Growth',16158,'5,37',3,3],
+  [9,'Nordea Nordic Small Cap BP','Nordic SC',15618,'5,19',9,9],
+  [10,'Pictet Global Megatrend R','Megatrend',15523,'5,15',3,3],
+  [11,'JPM China D USD','Cina',11148,'3,70',4,4],
+  [12,'JPM Middle East Africa D USD','MENA / EM',10265,'3,41','n.d.',6]
+];
+function rb(r){
+  if(r==='n.d.')return'<span class="badge" style="background:var(--bg3);color:var(--text3)">n.d.</span>';
+  if(r>=9)return'<span class="badge badge-green">'+r+'</span>';
+  if(r>=7)return'<span class="badge badge-blue">'+r+'</span>';
+  if(r>=5)return'<span class="badge badge-amber">'+r+'</span>';
+  return'<span class="badge badge-red">'+r+'</span>';
+}
+document.getElementById('fund-body').innerHTML=funds.map(f=>
+  '<tr><td style="font-size:10px;color:var(--text3)">'+f[0]+'</td><td>'+f[1]+'</td><td style="color:var(--text2)">'+f[2]+'</td><td class="r">'+fi(f[3])+'</td><td class="r">'+f[4]+'%</td><td class="r">'+rb(f[5])+'</td><td class="r">'+rb(f[6])+'</td></tr>'
+).join('');
+
+new Chart(document.getElementById('ch-hbar'),{
+  type:'bar',
+  data:{
+    labels:funds.map(f=>f[1].length>28?f[1].substring(0,26)+'…':f[1]),
+    datasets:[{
+      data:funds.map(f=>parseFloat(f[4].replace(',','.'))),
+      backgroundColor:funds.map(f=>{
+        const r=f[5]; if(r==='n.d.')return C.gray;
+        if(r>=9)return C.green; if(r>=7)return C.blue; if(r>=5)return C.amber; return C.red;
+      }),
+      borderRadius:3, barPercentage:.7
+    }]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x.toFixed(1)+'%'}}},
+    scales:{
+      x:{ticks:{callback:v=>v+'%',color:C.tick,font:{size:11}},grid:{color:C.grid},border:{display:false},max:18},
+      y:{ticks:{color:C.tick,font:{size:10}},grid:{display:false},border:{display:false}}
+    }
+  }
+});
+</script>
+</body>
+</html>
