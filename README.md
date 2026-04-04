@@ -12,6 +12,7 @@ Dashboard interattive per l'analisi del portafoglio finanziario.
 | [Performance Advice+ 2021–2025](https://scalvini.github.io/portfolio/Performance-Advice-2021-2025.html) | Rendimenti annuali vs S&P 500, crescita €1M, costi, diversificazione |
 | [Analisi Advice+ vs ETF](https://scalvini.github.io/portfolio/Analisi-Advice-vs-ETF.html) | Confronto 44 fondi Advice+ vs portafoglio 3 ETF (NAV 31/03/2026) |
 | [Diversificazione Advice+](https://scalvini.github.io/portfolio/Diversificazione-Advice.html) | Overlap, cluster tematici, score di ridondanza |
+| [Portafoglio 60/40](https://scalvini.github.io/portfolio/Portafoglio-60-40.html) | IWDA + DBZB — crescita, confronto vs Advice+, allocazione |
 
 ## Stack tecnico
 
@@ -25,6 +26,3 @@ Dashboard interattive per l'analisi del portafoglio finanziario.
 Tutti i file HTML contengono `<meta name="robots" content="noindex, nofollow">`.  
 Il file `robots.txt` blocca tutti i crawler.  
 Il repository è pubblico ma le pagine non compaiono nei risultati di ricerca.
-
----
-

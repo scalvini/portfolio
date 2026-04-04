@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<title>Portafoglio 60/40 — IWDA + DBZB</title>
+<style>
+  :root {
+    --bg:#ffffff;--bg2:#f7f7f5;--bg3:#efefed;
+    --text:#1a1a1a;--text2:#555552;--text3:#888885;
+    --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+    --green:#2e7d32;--green-bg:#e8f5e9;
+    --red:#c62828;--red-bg:#fdecea;
+    --blue:#1565c0;--blue-bg:#e3f2fd;
+    --amber:#BA7517;--amber-bg:#FAEEDA;
+    --c-blue:#378ADD;--c-teal:#1D9E75;--c-coral:#D85A30;
+    --c-amber:#BA7517;--c-purple:#7F77DD;--c-gray:#888780;
+    --radius:8px;--radius-lg:12px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --bg:#1e1e1e;--bg2:#2a2a2a;--bg3:#333333;
+    --text:#e8e8e8;--text2:#aaaaaa;--text3:#777777;
+    --border:rgba(255,255,255,0.12);--border2:rgba(255,255,255,0.22);
+    --green:#66bb6a;--green-bg:#1b3a1e;
+    --red:#ef9a9a;--red-bg:#3e1a1a;
+    --blue:#64b5f6;--blue-bg:#1a2e3e;
+    --amber:#FAC775;--amber-bg:#412402;
+  }}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg);line-height:1.5}
+  header{padding:24px 32px 20px;border-bottom:1px solid var(--border)}
+  header h1{font-size:20px;font-weight:600;margin-bottom:4px}
+  header p{font-size:12px;color:var(--text3)}
+  .container{max-width:1100px;margin:0 auto;padding:20px 24px}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+  .tab{padding:9px 22px;cursor:pointer;border:none;background:transparent;font-size:13px;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:var(--font);border-radius:var(--radius) var(--radius) 0 0;transition:color .15s;white-space:nowrap}
+  .tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
+  .tab:hover:not(.active){color:var(--text);background:var(--bg2)}
+  .pane{display:none}.pane.active{display:block}
+  .kpi-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:20px}
+  @media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--bg2);border-radius:var(--radius);padding:12px 14px}
+  .kpi.good{background:var(--green-bg)}.kpi.bad{background:var(--red-bg)}
+  .kl{font-size:11px;color:var(--text3);margin-bottom:4px}
+  .kv{font-size:18px;font-weight:600}
+  .pos{color:var(--green)}.neg{color:var(--red)}
+  .tbl-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{padding:7px 8px;border-bottom:1px solid var(--border2);font-size:11px;color:var(--text2);font-weight:600;text-align:left;white-space:nowrap;background:var(--bg2)}
+  th.r{text-align:right}
+  td{padding:5px 8px;border-bottom:0.5px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
+  td.r{text-align:right;max-width:none}
+  tr:hover td{background:var(--bg2)}
+  tfoot td{font-weight:600;border-top:1px solid var(--border2);background:var(--bg2);padding:7px 8px;white-space:nowrap}
+  .sec td{font-size:11px;font-weight:600;color:var(--text2);background:var(--bg3);padding:4px 8px;border-bottom:0.5px solid var(--border);white-space:nowrap;max-width:none}
+  .mono{font-family:var(--mono);font-size:10px;color:var(--text3)}
+  .note{font-size:11px;color:var(--text3);margin-top:12px;line-height:1.6}
+  .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600}
+  .badge-blue{background:var(--blue-bg);color:var(--blue)}
+  .badge-green{background:var(--green-bg);color:var(--green)}
+  .badge-red{background:var(--red-bg);color:var(--red)}
+  .badge-amber{background:var(--amber-bg);color:var(--amber)}
+  .b-eq{background:var(--blue-bg);color:var(--blue)}
+  .b-bd{background:var(--amber-bg);color:var(--amber)}
+  .two-panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+  @media(max-width:600px){.two-panels{grid-template-columns:1fr}}
+  .cmp-panel{border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+  .cmp-panel.winner{border-color:var(--green)}.cmp-panel.loser{border-color:var(--red)}
+  .cmp-title{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+  .winner .cmp-title{color:var(--green)}.loser .cmp-title{color:var(--red)}
+  .cmp-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:14px}
+  .card.ok{border-color:var(--green);border-width:1.5px}
+  .card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  @media(max-width:600px){.g2{grid-template-columns:1fr}}
+  .divider{height:1px;background:var(--border);margin:20px 0}
+  .section-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px}
+  .chart-wrap{position:relative;width:100%}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px}
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+  .legend-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+  .alert{border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;font-size:12px;line-height:1.6;border-left:3px solid}
+  .alert strong{font-weight:600}
+  .alert-green{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+  .alert-blue{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+  .ovl-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .ovl-label{font-size:11px;color:var(--text2);min-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media(max-width:600px){.ovl-label{min-width:100px;font-size:10px}}
+  .ovl-track{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+  .ovl-fill{height:6px;border-radius:3px}
+  .ovl-pct{font-size:11px;font-weight:500;color:var(--text);width:50px;text-align:right;flex-shrink:0}
+  footer{margin-top:32px;padding:16px 32px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);line-height:1.7}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Portafoglio 60/40 — IWDA + DBZB</h1>
+  <p>Creazione: 01/09/2025 &nbsp;·&nbsp; Aggiornamento: 02/04/2026 &nbsp;·&nbsp; Fonte prezzi: TradingView &nbsp;·&nbsp; Investimento: € 3.500.000</p>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('ptf')">Portafoglio</button>
+    <button class="tab" onclick="showTab('grow')">Crescita</button>
+    <button class="tab" onclick="showTab('cmp')">vs Advice+</button>
+    <button class="tab" onclick="showTab('alloc')">Allocazione</button>
+  </div>
+
+  <!-- ═══ TAB 1 — PORTAFOGLIO ═══ -->
+  <div class="pane active" id="pane-ptf">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kl">Investito 01/09/2025</div><div class="kv">€ 3.500.000</div></div>
+      <div class="kpi"><div class="kl">Valore oggi</div><div class="kv" id="k-val">—</div></div>
+      <div class="kpi"><div class="kl">Guadagno €</div><div class="kv" id="k-gain">—</div></div>
+      <div class="kpi"><div class="kl">Rendimento %</div><div class="kv" id="k-pct">—</div></div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:28px">#</th>
+          <th style="width:300px">Strumento</th>
+          <th>ISIN</th>
+          <th>Benchmark</th>
+          <th class="r">Peso</th>
+          <th class="r">Investito €</th>
+          <th class="r">Prezzo acq.</th>
+          <th class="r">Prezzo oggi</th>
+          <th class="r">Valore oggi €</th>
+          <th class="r">P/L €</th>
+          <th class="r">Rend. %</th>
+        </tr></thead>
+        <tbody id="ptf-body"></tbody>
+        <tfoot id="ptf-foot"></tfoot>
+      </table>
+    </div>
+    <p class="note">Prezzi di acquisto al 01/09/2025 da TradingView (IWDA su Euronext Amsterdam, DBZB su Xetra). Prezzi attuali al 02/04/2026. TER: IWDA 0,20% p.a., DBZB 0,25% p.a.</p>
+  </div>
+
+  <!-- ═══ TAB 2 — CRESCITA ═══ -->
+  <div class="pane" id="pane-grow">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kl">Investito</div><div class="kv">€ 3.500.000</div></div>
+      <div class="kpi good"><div class="kl">Valore oggi</div><div class="kv pos" id="k2-val">—</div></div>
+      <div class="kpi good"><div class="kl">Guadagno</div><div class="kv pos" id="k2-gain">—</div></div>
+      <div class="kpi"><div class="kl">Durata</div><div class="kv">7 mesi</div></div>
+    </div>
+
+    <div class="section-label">Evoluzione mensile del portafoglio</div>
+    <div class="chart-wrap" style="height:300px;margin-bottom:14px"><canvas id="ch-grow"></canvas></div>
+    <div class="legend" style="margin-bottom:16px">
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--c-blue)"></span>Valore portafoglio 60/40</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--c-gray);opacity:.5"></span>Capitale investito</span>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Andamento prezzi ETF</div>
+    <div class="chart-wrap" style="height:260px;margin-bottom:14px"><canvas id="ch-prices"></canvas></div>
+    <div class="legend" style="margin-bottom:16px">
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--c-blue)"></span>IWDA (€, scala sx)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--c-amber)"></span>DBZB (€, scala dx)</span>
+    </div>
+
+    <p class="note">Prezzi di chiusura mensili da TradingView. I prezzi intermedi (ott 2025 – mar 2026) sono approssimati alla chiusura dell'ultimo giorno del mese. Prezzo aprile 2026 = ultima chiusura disponibile.</p>
+  </div>
+
+  <!-- ═══ TAB 3 — VS ADVICE+ ═══ -->
+  <div class="pane" id="pane-cmp">
+    <div class="two-panels">
+      <div class="cmp-panel" id="p-ptf">
+        <div class="cmp-title">Portafoglio 60/40 — 2 ETF</div>
+        <div class="cmp-kpi">
+          <div class="kpi"><div class="kl">Investito</div><div class="kv">€ 3.500K</div></div>
+          <div class="kpi"><div class="kl">Valore oggi</div><div class="kv" id="c-ptf-val">—</div></div>
+          <div class="kpi"><div class="kl">Rendimento</div><div class="kv" id="c-ptf-pct">—</div></div>
+        </div>
+      </div>
+      <div class="cmp-panel" id="p-adv">
+        <div class="cmp-title">Advice+ — 44 fondi attivi</div>
+        <div class="cmp-kpi">
+          <div class="kpi"><div class="kl">Investito</div><div class="kv">€ 3.426K</div></div>
+          <div class="kpi"><div class="kl">Valore oggi</div><div class="kv" id="c-adv-val">—</div></div>
+          <div class="kpi"><div class="kl">Rendimento</div><div class="kv" id="c-adv-pct">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:220px">Metrica</th>
+          <th class="r"><span class="badge b-eq">60/40 ETF</span></th>
+          <th class="r"><span class="badge badge-red">Advice+ 44 fondi</span></th>
+          <th class="r">Delta</th>
+        </tr></thead>
+        <tbody id="cmp-body"></tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Contributo per componente</div>
+    <div id="contrib-bars"></div>
+
+    <div class="divider"></div>
+    <div class="alert alert-green"><strong>Sintesi:</strong> Il portafoglio 60/40 con 2 soli ETF ha generato un rendimento superiore al portafoglio Advice+ con 44 fondi attivi, con costi drasticamente inferiori e maggiore trasparenza.</div>
+
+    <p class="note">Dati Advice+: Verbale FinecoBank 12/09/2025, NAV aggiornati 31/03/2026, EUR/USD 1,154. Portafoglio 60/40: prezzi TradingView al 02/04/2026. Periodi non perfettamente sovrapponibili (sett. 2025 vs. mar. 2026).</p>
+  </div>
+
+  <!-- ═══ TAB 4 — ALLOCAZIONE ═══ -->
+  <div class="pane" id="pane-alloc">
+    <div class="kpi-row" style="grid-template-columns:repeat(3,1fr)">
+      <div class="kpi"><div class="kl">Strumenti totali</div><div class="kv">2</div></div>
+      <div class="kpi"><div class="kl">TER medio ponderato</div><div class="kv pos">0,22%</div></div>
+      <div class="kpi"><div class="kl">Costo annuo su €3,5M</div><div class="kv pos">~€ 7.700</div></div>
+    </div>
+
+    <div class="g2">
+      <div>
+        <div class="section-label">Asset allocation</div>
+        <div class="chart-wrap" style="height:220px"><canvas id="ch-alloc"></canvas></div>
+        <div class="legend" style="margin-bottom:12px">
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-blue)"></span>Equity globale 60%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-amber)"></span>Bond gov. hedged 40%</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Esposizione geografica (equity)</div>
+        <div class="chart-wrap" style="height:220px"><canvas id="ch-geo"></canvas></div>
+        <div class="legend" style="margin-bottom:12px">
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-blue)"></span>Nord America 72%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-purple)"></span>Europa 18%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-teal)"></span>Asia Pac. 9%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--c-gray)"></span>Altro 1%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Dettaglio strumenti</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>ETF</th><th>ISIN</th><th>Benchmark</th>
+          <th class="r">TER</th><th class="r">Peso</th><th class="r">AUM (€ mld)</th><th>Replica</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>1</td><td>iShares Core MSCI World UCITS ETF USD (Acc)</td><td class="mono">IE00B4L5Y983</td><td>MSCI World</td><td class="r">0,20%</td><td class="r">60%</td><td class="r">111,6</td><td>Fisica</td></tr>
+          <tr><td>2</td><td>Xtrackers Global Sovereign UCITS ETF 1C EUR Hdg</td><td class="mono">LU0378818131</td><td>FTSE WGBI Dev. Mkts</td><td class="r">0,25%</td><td class="r">40%</td><td class="r">0,74</td><td>Fisica (camp.)</td></tr>
+        </tbody>
+        <tfoot><tr>
+          <td colspan="4">TOTALE</td><td class="r">0,22%</td><td class="r">100%</td><td></td><td></td>
+        </tr></tfoot>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Vantaggi strutturali</div>
+    <div class="alert alert-blue"><strong>Costi:</strong> TER ponderato 0,22% vs ~1,85% Advice+ → risparmio annuo di ~€ 57.000 su €3,5M.</div>
+    <div class="alert alert-green"><strong>Semplicità:</strong> 2 strumenti vs 44 — gestione minima, ribilanciamento annuale, piena trasparenza.</div>
+    <div class="alert alert-blue"><strong>Liquidità:</strong> ETF quotati in borsa, settlement T+2 vs T+3/T+5 per fondi UCITS.</div>
+
+    <p class="note">TER da KIID ufficiali (iShares, DWS). AUM da TradingView. Esposizione geografica equity da iShares factsheet MSCI World.</p>
+  </div>
+</div>
+
+<footer>
+  Portafoglio 60/40: acquisto 01/09/2025, prezzi TradingView (IWDA Euronext, DBZB Xetra), aggiornamento 02/04/2026.
+  Confronto Advice+: Verbale FinecoBank 12/09/2025, NAV 31/03/2026, EUR/USD 1,154.
+  TER: IWDA 0,20%, DBZB 0,25%.
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ── Utility ── */
+function fi(v){ return Math.round(v).toLocaleString('it-IT'); }
+function fp(v){ return (v>=0?'+':'')+v.toFixed(2)+'%'; }
+function fe(v,d){ return Number(v).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+const C = {
+  blue: isDark?'#64b5f6':'#1565c0',
+  green: isDark?'#66bb6a':'#2e7d32',
+  red: isDark?'#ef9a9a':'#c62828',
+  amber: isDark?'#FAC775':'#BA7517',
+  gray: isDark?'#777777':'#888885',
+  purple:'#7F77DD', teal:'#1D9E75', coral:'#D85A30',
+  cBlue:'#378ADD', cAmber:'#BA7517', cPurple:'#7F77DD', cTeal:'#1D9E75', cGray:'#888780',
+  grid: isDark?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.06)',
+  tick: isDark?'rgba(255,255,255,0.5)':'rgba(0,0,0,0.45)'
+};
+
+/* ── Tab switcher ── */
+const TABS = ['ptf','grow','cmp','alloc'];
+function showTab(id){
+  TABS.forEach((t,i)=>{
+    document.querySelectorAll('.tab')[i].classList.toggle('active', t===id);
+  });
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+}
+
+/* ══════ DATI PORTAFOGLIO ══════ */
+const INVESTED = 3500000;
+const etfs = [
+  { n:"iShares Core MSCI World UCITS ETF USD (Acc)", ticker:"IWDA", isin:"IE00B4L5Y983",
+    bench:"MSCI World", weight:60, pBuy:104.00, pNow:112.63 },
+  { n:"Xtrackers Global Sovereign UCITS ETF 1C EUR Hdg", ticker:"DBZB", isin:"LU0378818131",
+    bench:"FTSE WGBI Dev. Mkts (EUR Hdg)", weight:40, pBuy:210.44, pNow:208.78 },
+];
+for(const e of etfs){
+  e.inv = INVESTED * e.weight / 100;
+  e.ret = (e.pNow - e.pBuy) / e.pBuy * 100;
+  e.gain = e.inv * e.ret / 100;
+  e.valNow = e.inv + e.gain;
+}
+const totVal = etfs.reduce((s,e)=>s+e.valNow,0);
+const totGain = totVal - INVESTED;
+const totPct = totGain / INVESTED * 100;
+
+/* ── Dati Advice+ (dal file Analisi-Advice-vs-ETF.html) ── */
+const ADV_INV = 3425764;
+const ADV_PCT = 2.80; /* rendimento stimato sett.25→mar.26 */
+const ADV_VAL = ADV_INV * (1 + ADV_PCT/100);
+const ADV_GAIN = ADV_VAL - ADV_INV;
+
+/* ══════ TAB 1: PORTAFOGLIO ══════ */
+document.getElementById('ptf-body').innerHTML = etfs.map((e,i)=>{
+  const cls = e.gain>=0?'pos':'neg';
+  return `<tr>
+    <td style="font-size:10px;color:var(--text3)">${i+1}</td>
+    <td title="${e.n}">${e.n}</td>
+    <td class="mono">${e.isin}</td>
+    <td style="font-size:11px;color:var(--text2)">${e.bench}</td>
+    <td class="r">${e.weight}%</td>
+    <td class="r">${fi(e.inv)}</td>
+    <td class="r">${fe(e.pBuy,2)} €</td>
+    <td class="r">${fe(e.pNow,2)} €</td>
+    <td class="r">${fi(e.valNow)}</td>
+    <td class="r ${cls}">${(e.gain>=0?'+':'')+'€ '+fi(Math.abs(e.gain))}</td>
+    <td class="r ${cls}">${fp(e.ret)}</td>
+  </tr>`;
+}).join('');
+
+document.getElementById('ptf-foot').innerHTML = `<tr>
+  <td colspan="4">TOTALE (2 ETF)</td><td class="r">100%</td>
+  <td class="r">${fi(INVESTED)}</td><td></td><td></td>
+  <td class="r">${fi(totVal)}</td>
+  <td class="r ${totGain>=0?'pos':'neg'}">${(totGain>=0?'+':'')+'€ '+fi(Math.abs(totGain))}</td>
+  <td class="r ${totPct>=0?'pos':'neg'}">${fp(totPct)}</td>
+</tr>`;
+
+document.getElementById('k-val').textContent = '€ '+fi(totVal);
+const kg = document.getElementById('k-gain');
+kg.textContent = (totGain>=0?'+':'')+'€ '+fi(Math.abs(totGain));
+kg.className = 'kv '+(totGain>=0?'pos':'neg');
+const kp = document.getElementById('k-pct');
+kp.textContent = fp(totPct);
+kp.className = 'kv '+(totPct>=0?'pos':'neg');
+
+/* ══════ TAB 2: CRESCITA ══════ */
+document.getElementById('k2-val').textContent = '€ '+fi(totVal);
+document.getElementById('k2-gain').textContent = '+€ '+fi(totGain);
+
+/* Prezzi mensili (chiusure fine mese da TradingView, stime) */
+const months = [
+  {m:'Set 25', iwda:104.00, dbzb:210.44},
+  {m:'Ott 25', iwda:106.50, dbzb:210.80},
+  {m:'Nov 25', iwda:108.95, dbzb:212.50},
+  {m:'Dic 25', iwda:111.35, dbzb:213.20},
+  {m:'Gen 26', iwda:115.09, dbzb:210.60},
+  {m:'Feb 26', iwda:112.74, dbzb:212.46},
+  {m:'Mar 26', iwda:108.23, dbzb:208.34},
+  {m:'Apr 26', iwda:112.63, dbzb:208.78},
+];
+const ptfValues = months.map(m=>{
+  const vIwda = INVESTED*0.6/104.00*m.iwda;
+  const vDbzb = INVESTED*0.4/210.44*m.dbzb;
+  return Math.round(vIwda+vDbzb);
+});
+
+new Chart(document.getElementById('ch-grow'),{
+  type:'line',
+  data:{
+    labels:months.map(m=>m.m),
+    datasets:[
+      {label:'Portafoglio 60/40',data:ptfValues,borderColor:C.cBlue,backgroundColor:isDark?'rgba(55,138,221,0.08)':'rgba(55,138,221,0.08)',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:C.cBlue,borderWidth:2.5},
+      {label:'Investito',data:months.map(()=>INVESTED),borderColor:C.gray,borderDash:[6,4],borderWidth:1.5,pointRadius:0,fill:false}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': € '+fi(c.parsed.y)}}},
+    scales:{
+      y:{ticks:{callback:v=>'€ '+fi(v),color:C.tick,font:{size:11}},grid:{color:C.grid},border:{display:false},min:3400000},
+      x:{ticks:{color:C.tick,font:{size:11},autoSkip:false},grid:{display:false},border:{display:false}}
+    }
+  }
+});
+
+new Chart(document.getElementById('ch-prices'),{
+  type:'line',
+  data:{
+    labels:months.map(m=>m.m),
+    datasets:[
+      {label:'IWDA (€)',data:months.map(m=>m.iwda),borderColor:C.cBlue,borderWidth:2.5,tension:.3,pointRadius:4,pointBackgroundColor:C.cBlue,yAxisID:'y'},
+      {label:'DBZB (€)',data:months.map(m=>m.dbzb),borderColor:C.cAmber,borderWidth:2.5,tension:.3,pointRadius:4,pointBackgroundColor:C.cAmber,yAxisID:'y1'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fe(c.parsed.y,2)}}},
+    scales:{
+      y:{position:'left',ticks:{callback:v=>v+'€',color:C.cBlue,font:{size:11}},grid:{color:C.grid},border:{display:false},min:100,max:120},
+      y1:{position:'right',ticks:{callback:v=>v+'€',color:C.cAmber,font:{size:11}},grid:{display:false},border:{display:false},min:205,max:216},
+      x:{ticks:{color:C.tick,font:{size:11},autoSkip:false},grid:{display:false},border:{display:false}}
+    }
+  }
+});
+
+/* ══════ TAB 3: VS ADVICE+ ══════ */
+const c_ptf_val = document.getElementById('c-ptf-val');
+c_ptf_val.textContent = '€ '+fi(totVal);
+c_ptf_val.className = 'kv pos';
+const c_ptf_pct = document.getElementById('c-ptf-pct');
+c_ptf_pct.textContent = fp(totPct);
+c_ptf_pct.className = 'kv pos';
+const c_adv_val = document.getElementById('c-adv-val');
+c_adv_val.textContent = '€ '+fi(ADV_VAL);
+c_adv_val.className = 'kv '+(ADV_PCT>=0?'pos':'neg');
+const c_adv_pct = document.getElementById('c-adv-pct');
+c_adv_pct.textContent = fp(ADV_PCT);
+c_adv_pct.className = 'kv '+(ADV_PCT>=0?'pos':'neg');
+
+if(totPct > ADV_PCT) document.getElementById('p-ptf').classList.add('winner');
+else document.getElementById('p-ptf').classList.add('loser');
+if(ADV_PCT > totPct) document.getElementById('p-adv').classList.add('winner');
+else document.getElementById('p-adv').classList.add('loser');
+
+const delta_pct = totPct - ADV_PCT;
+const delta_gain = totGain - ADV_GAIN;
+const cmpRows = [
+  ["Capitale investito",   "€ "+fi(INVESTED),    "€ "+fi(ADV_INV),    (INVESTED-ADV_INV>=0?"+":"")+"€ "+fi(INVESTED-ADV_INV), ""],
+  ["Valore oggi",          "€ "+fi(totVal),       "€ "+fi(ADV_VAL),    (totVal-ADV_VAL>=0?"+":"")+"€ "+fi(Math.round(totVal-ADV_VAL)), totVal>=ADV_VAL?"pos":"neg"],
+  ["Guadagno €",           "+€ "+fi(totGain),     "+€ "+fi(ADV_GAIN),  (delta_gain>=0?"+":"")+"€ "+fi(Math.round(Math.abs(delta_gain))), delta_gain>=0?"pos":"neg"],
+  ["Rendimento %",         fp(totPct),            fp(ADV_PCT),         (delta_pct>=0?"+":"")+delta_pct.toFixed(2)+"%",       delta_pct>=0?"pos":"neg"],
+  ["Numero strumenti",     "2 ETF",               "44 fondi",          "−42 strumenti",        ""],
+  ["TER annuo stimato",    "~0,22%",              "~1,85%",            "ETF 8× più economico", "pos"],
+  ["Costo annuo su AUM",   "~€ 7.700",            "~€ 63.400",         "Risparmio € 55.700",   "pos"],
+  ["Liquidità",            "T+2 (borsa)",         "T+3 / T+5 (UCITS)","ETF più liquido",       ""],
+];
+document.getElementById('cmp-body').innerHTML = cmpRows.map(r=>`<tr>
+  <td style="font-weight:600">${r[0]}</td>
+  <td class="r"><span class="badge b-eq">${r[1]}</span></td>
+  <td class="r"><span class="badge badge-red">${r[2]}</span></td>
+  <td class="r ${r[4]}">${r[3]}</td>
+</tr>`).join('');
+
+/* Contributo barre */
+const contribHTML = etfs.map(e=>{
+  const contrib = (e.weight/100) * e.ret;
+  const w = Math.min(Math.abs(contrib)/6*100, 100);
+  const col = contrib>=0 ? 'var(--green)' : 'var(--red)';
+  return `<div class="ovl-row">
+    <div class="ovl-label">${e.ticker} (${e.weight}%)</div>
+    <div class="ovl-track"><div class="ovl-fill" style="width:${w}%;background:${col}"></div></div>
+    <div class="ovl-pct" style="color:${col}">${(contrib>=0?'+':'')+contrib.toFixed(2)}%</div>
+  </div>`;
+}).join('') + `<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+  <span>Totale portafoglio</span>
+  <span class="pos">${fp(totPct)}</span>
+</div>`;
+document.getElementById('contrib-bars').innerHTML = contribHTML;
+
+/* ══════ TAB 4: ALLOCAZIONE — DONUT CHARTS ══════ */
+const pieOpts = {responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'50%'};
+new Chart(document.getElementById('ch-alloc'),{
+  type:'doughnut',
+  data:{labels:['Equity','Bond'],datasets:[{data:[60,40],backgroundColor:[C.cBlue,C.cAmber],borderWidth:0}]},
+  options:pieOpts
+});
+new Chart(document.getElementById('ch-geo'),{
+  type:'doughnut',
+  data:{labels:['N.America','Europa','Asia Pac.','Altro'],datasets:[{data:[72,18,9,1],backgroundColor:[C.cBlue,C.cPurple,C.cTeal,C.cGray],borderWidth:0}]},
+  options:pieOpts
+});
+</script>
+</body>
+</html>

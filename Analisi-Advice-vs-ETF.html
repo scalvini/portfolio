@@ -296,7 +296,7 @@
           <th class="r">Ctv sett.25 €</th>
           <th class="r">Ctv oggi €</th>
           <th class="r">%</th>
-          <th class="r">Contributo pp</th>
+          <th class="r">Contributo %</th>
         </tr></thead>
         <tbody id="top3-body"></tbody>
       </table>
@@ -311,12 +311,12 @@
           <th class="r">Ctv sett.25 €</th>
           <th class="r">Ctv oggi €</th>
           <th class="r">%</th>
-          <th class="r">Contributo pp</th>
+          <th class="r">Contributo %</th>
         </tr></thead>
         <tbody id="bot3-body"></tbody>
       </table>
     </div>
-    <p class="note">Contributo pp = impatto del singolo fondo sul rendimento totale del portafoglio Advice+.</p>
+    <p class="note">Contributo % = impatto del singolo fondo sul rendimento totale del portafoglio Advice+.</p>
   </div>
 </div>
 
@@ -399,7 +399,7 @@ function ctv1(f) {
 function fi(v)    { return Math.round(v).toLocaleString('it-IT'); }
 function fe(v, d) { return Number(v).toLocaleString('it-IT', {minimumFractionDigits:d, maximumFractionDigits:d}); }
 function fp(v)    { return (v >= 0 ? '+' : '') + v.toFixed(2) + '%'; }
-function fpp(v)   { return (v >= 0 ? '+' : '') + v.toFixed(3) + ' pp'; }
+function fpp(v)   { return (v >= 0 ? '+' : '') + v.toFixed(3) + '%'; }
 function fq(q)    { return q >= 100 ? fi(q) : fe(q, 3); }
 
 /* ── ADVICE TAB ── */
@@ -482,7 +482,7 @@ const cmpRows = [
   ["Capitale investito",       "€ "+fi(aRef),             "€ "+fi(eRef),   (aRef-eRef>=0?"+":"")+fi(aRef-eRef),    ""],
   ["Valore oggi",              "€ "+fi(aNow),             "€ "+fi(eNow),   (vDelta>=0?"+":"")+fi(vDelta),            vDelta>=0?"pos":"neg"],
   ["Guadagno €",              (aDiff>=0?"+":"")+"€ "+fi(aDiff), "+€ "+fi(eGain), (aDiff-eGain>=0?"+":"")+"€ "+fi(aDiff-eGain), aDiff>=eGain?"pos":"neg"],
-  ["Rendimento %",             fp(aPct),                  fp(ePct),        (pDelta>=0?"+":"")+pDelta.toFixed(2)+" pp", pDelta>=0?"pos":"neg"],
+  ["Rendimento %",             fp(aPct),                  fp(ePct),        (pDelta>=0?"+":"")+pDelta.toFixed(2)+"%", pDelta>=0?"pos":"neg"],
   ["Numero strumenti",         "44 fondi / prodotti",     "3 ETF",         "−41 strumenti",                          ""],
   ["TER annuo stimato",        "~1,5 – 2,5%",             "~0,10 – 0,22%", "ETF molto più economico",                ""],
   ["Liquidità",                "T+3 / T+5 (fondi UCITS)", "T+2 (borsa)",   "ETF più liquido",                        ""],
